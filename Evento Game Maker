@@ -1,0 +1,34 @@
+/// @description Evento cualquiera de Game Maker
+dll_handle = external_define("runExe.dll", "MyFunction", dll_cdecl, ty_real, 4, ty_real, ty_real, ty_real, ty_real);
+var _cadena = "Mi_exe.exe/primer parámetro/segundo parámetro"; //Puedes poner hasta 10, pero si te pasas luego se arregla
+var _partecadena = "";
+var _delimitadorescaracteres = "";
+var _ndigitoscaracteractual = 0;
+var _faltatexto = 0;
+var _fintexto = 0;
+
+for (var _i = 1; _i <= string_length(_cadena); _i++) {
+    var _char = string_char_at(_cadena, _i);
+    var _char_code = string(ord(_char));
+    _ndigitoscaracteractual = string_length(_char_code);
+    for (var _j = 1; _j <= _ndigitoscaracteractual; _j++) {
+        _partecadena += string_char_at(_char_code, _j);
+        _delimitadorescaracteres += (_j == 1) ? "1" : "0";
+    }
+    if (_i mod 5 == 0 || _i == string_length(_cadena)) {
+        _faltatexto = (_i < string_length(_cadena)) ? 1 : 0;
+        var _numeropartecadena = real(_partecadena);
+        var _numerodelimitadorescaracteres = real(_delimitadorescaracteres);
+
+		var _retornoDLL = external_call(dll_handle, _numeropartecadena, _numerodelimitadorescaracteres, _faltatexto, _fintexto);
+		if(_retornoDLL > 0) {
+		    show_message("Resultado de la llamada " + string(_retornoDLL) );
+		    _fintexto = 2;
+		} else {
+		    _fintexto = 0;
+		}
+        _partecadena = "";
+        _delimitadorescaracteres = "";
+    }
+}
+external_free("runExe.dll");
