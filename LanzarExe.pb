@@ -1,13 +1,9 @@
-CompilerIf #PB_Compiler_Unicode
-  EnableExplicit
-  UsePNGImageDecoder()
-CompilerEndIf
-
 ProcedureDLL.i AbrirProgramaConParametros(_numeroParametros.i,_textoExe0.s, _textoParametro1.s, _textoParametro2.s, _textoParametro3.s, _textoParametro4.s, _textoParametro5.s, _textoParametro6.s, _textoParametro7.s, _textoParametro8.s, _textoParametro9.s)
     Protected _ejecutar.s="" 
     Protected _parametros.s=""
     Protected _i.i ; Declaramos explícitamente la variable _i
     Protected _programID.i
+    Protected _programHandle.i
     
     _ejecutar = _textoExe0
     For _i = 1 To _numeroParametros - 1
@@ -24,8 +20,9 @@ ProcedureDLL.i AbrirProgramaConParametros(_numeroParametros.i,_textoExe0.s, _tex
         EndSelect
     Next _i
 
-    If RunProgram(_ejecutar, _parametros, "", #PB_Program_Open)
-        _programID = ProgramID(RunProgram(_ejecutar, _parametros, "", #PB_Program_Open))
+    _programHandle = RunProgram(_ejecutar, _parametros, "", #PB_Program_Open)
+    If _programHandle
+        _programID = ProgramID(_programHandle)
         ProcedureReturn _programID ; Devuelve el ID del programa. Programa lanzado exitosamente
     Else
         ProcedureReturn 1 ;"No se pudo lanzar el programa"
